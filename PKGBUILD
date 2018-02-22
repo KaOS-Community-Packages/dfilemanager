@@ -1,13 +1,14 @@
 pkgname=dfilemanager-git
 _pkgname=dfilemanager
 pkgver=r407.73d24ef
-pkgrel=2
+pkgrel=1
 pkgdesc="Dfilemanager, a QT based crossplatform File browser."
 arch=('x86_64')
 url="http://dfilemanager.sourceforge.net/"
 license=('GPL')
-depends=( 'qt5-base' 'solid' 'exiv2' 'poppler')
-makedepends=('git' 'cmake' 'qt5-tools' 'qt5-script')
+depends=( 'qt5-base' 'qt5-script' 'qt5-tools')
+optdepends=('solid')
+makedepends=('git' 'cmake')
 provides=('dfilemanager')
 conflicts=('dfilemanager')
 source=("${_pkgname}::git://git.code.sf.net/p/dfilemanager/code")
@@ -22,18 +23,15 @@ pkgver() {
 }
 
 build() {
+    cd "$srcdir/$_pkgname/dfm"
 
-    mkdir -p build
-    cd build
-    
-    cmake ../${_pkgname} -DCMAKE_INSTALL_PREFIX=/usr -DQT5BUILD=ON
+    cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DQT5BUILD=ON
     make
 }
  
 package() {
-    
-    cd build
-  
-    make DESTDIR=${pkgdir} install
+    cd "$srcdir/$_pkgname/dfm"
+    #make INSTALL_ROOT="${pkgdir}" install
+    make DESTDIR="$pkgdir/" install
 } 
 
